@@ -1,5 +1,7 @@
 # Frame Motion
 
+[![Windows CI](https://github.com/Win-gun/Frame-Motion/actions/workflows/windows.yml/badge.svg)](https://github.com/Win-gun/Frame-Motion/actions/workflows/windows.yml)
+
 把摄影成片制作成可直接插入剪辑时间轴的动态展示视频。导入照片、读取 EXIF、调整构图与动画，逐帧预览，再用本地 Remotion 渲染器导出真实视频。
 
 这是独立的 Frame Motion 照片工具，包含一张可替换的人像示例。照片处理、项目缓存和视频渲染在运行应用的电脑上完成，无需 AI API 或云端渲染账号。
@@ -23,6 +25,18 @@ npm run dev
 npm run build
 npm start
 ```
+
+## Windows 启动
+
+在 Windows x64 上安装 Node.js 22 后，可在 PowerShell 中运行：
+
+```powershell
+npm.cmd ci --include=dev
+npm.cmd run build
+npm.cmd start
+```
+
+生产启动脚本可跨平台设置环境变量，无需手动输入 `NODE_ENV=production`。Windows 下优先使用 JPG/PNG；HEIC 解码失败时没有 macOS ImageIO 后备路径。系统 FFmpeg / ffprobe 仅为验收脚本所需，运行完整的多规格验收仍需处理其中的 macOS `sips` 步骤。
 
 ## 使用
 
@@ -77,6 +91,26 @@ npm run test:integration
 ```
 
 可用 `PORT` 指定独立验收端口，并用 `RENDER_BASE_URL` 指定验收地址。完整渲染验收会创建测试任务和视频，宜在独立测试工作区运行。
+
+## Windows 自动验收
+
+[Windows CI](https://github.com/Win-gun/Frame-Motion/actions/workflows/windows.yml) 在推送到 `main`、Pull Request 和手动运行时触发，使用 Windows x64 与 Node.js 22，依次验证：
+
+1. 按锁文件安装、TypeScript检查、单元测试及生产构建。
+2. 安装FFmpeg / ffprobe并准备Remotion的渲染浏览器。
+3. 通过与 `npm start` 相同的生产入口启动服务，验证静态页面、唯一人像示例及照片和背景接口。
+4. 实际上传PNG、排队渲染并下载MP4，核对H.264 / yuv420p / 720×720 / 24fps / 24帧 / 1秒 / 无音轨，提取关键帧。
+5. 关闭本轮测试进程并核对端口释放。
+
+在Mac浏览器打开运行详情，即可查看各步骤日志。在 **Artifacts** 下载 `windows-x64-render-proof`，其中包含MP4、关键帧、JSON报告与服务日志，保留7天。此工作流不把HEIC、ProRes、4K或桌面浏览器交互列为已验证能力。
+
+本地运行同一验收器需要一个没有 `.frame-motion/` 数据的独立工作区、已完成的生产构建，以及FFmpeg / ffprobe：
+
+```sh
+CI=true npm run test:ci
+```
+
+验收器会拒绝已有运行数据，避免误用真实项目目录。
 
 ## 目录
 

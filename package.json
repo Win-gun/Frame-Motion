@@ -6,13 +6,14 @@
   "scripts": {
     "dev": "tsx server/index.ts",
     "build": "tsc --noEmit && vite build",
-    "start": "NODE_ENV=production tsx server/index.ts",
+    "start": "node scripts/start-production.mjs",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:integration": "tsx scripts/verify-render.ts",
     "test:landscape": "tsx scripts/verify-landscape.ts",
     "studio": "remotion studio src/video/index.ts --port 3001",
-    "check:environment": "node scripts/check-environment.mjs"
+    "check:environment": "node scripts/check-environment.mjs",
+    "test:ci": "node scripts/verify-ci.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.538",
