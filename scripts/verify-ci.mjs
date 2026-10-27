@@ -109,6 +109,10 @@ async function main() {
   assert.equal(result.height, 720);
   assert.equal(result.fps, 24);
   assert.equal(result.frameCount, 24);
+  assert.equal(result.codec, 'h264');
+  assert.equal(result.pixelFormat, 'yuv420p');
+  assert.equal(result.colorRange, 'tv');
+  assert.equal(result.colorSpace, 'bt709');
   assert.equal(result.keyframes.length, 4);
   for (const file of [`${result.id}.mp4`, ...result.keyframes.map((_, i) => `${result.id}-frame-${i}.png`)]) {
     assert((await stat(join(artifacts, file))).size > 0, `Empty artifact: ${file}`);

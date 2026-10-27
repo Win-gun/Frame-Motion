@@ -192,6 +192,9 @@ export class JobQueue {
         outputLocation: output,
         codec: prores ? 'prores' : 'h264',
         pixelFormat: prores ? 'yuv422p10le' : 'yuv420p',
+        // Explicit conversion avoids JPEG full-range output differing across platforms.
+        imageFormat: prores ? undefined : 'png',
+        colorSpace: prores ? undefined : 'bt709',
         proResProfile: prores ? 'hq' : undefined,
         crf: prores ? undefined : Math.round(35 - job.recipe.exportSettings.quality * 0.2),
         muted: true,

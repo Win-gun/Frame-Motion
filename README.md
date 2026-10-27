@@ -99,7 +99,7 @@ npm run test:integration
 1. 按锁文件安装、TypeScript检查、单元测试及生产构建。
 2. 安装FFmpeg / ffprobe并准备Remotion的渲染浏览器。
 3. 通过与 `npm start` 相同的生产入口启动服务，验证静态页面、唯一人像示例及照片和背景接口。
-4. 实际上传PNG、排队渲染并下载MP4，核对H.264 / yuv420p / 720×720 / 24fps / 24帧 / 1秒 / 无音轨，提取关键帧。
+4. 实际上传PNG、排队渲染并下载MP4，核对H.264 / yuv420p / BT.709有限范围 / 720×720 / 24fps / 24帧 / 1秒 / 无音轨，提取关键帧。
 5. 关闭本轮测试进程并核对端口释放。
 
 在Mac浏览器打开运行详情，即可查看各步骤日志。在 **Artifacts** 下载 `windows-x64-render-proof`，其中包含MP4、关键帧、JSON报告与服务日志，保留7天。此工作流不把HEIC、ProRes、4K或桌面浏览器交互列为已验证能力。

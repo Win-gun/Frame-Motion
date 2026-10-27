@@ -54,7 +54,7 @@ async function verifyVideo(
     'error',
     '-count_frames',
     '-show_entries',
-    'stream=codec_type,codec_name,pix_fmt,width,height,avg_frame_rate,nb_read_frames',
+    'stream=codec_type,codec_name,pix_fmt,color_range,color_space,width,height,avg_frame_rate,nb_read_frames',
     '-show_entries',
     'format=duration',
     '-of',
@@ -66,6 +66,8 @@ async function verifyVideo(
       codec_type: string;
       codec_name?: string;
       pix_fmt?: string;
+      color_range?: string;
+      color_space?: string;
       width?: number;
       height?: number;
       avg_frame_rate?: string;
@@ -77,6 +79,10 @@ async function verifyVideo(
   assert(video, 'No video stream');
   assert.equal(video.codec_name, codec);
   assert.equal(video.pix_fmt, codec === 'prores' ? 'yuv422p10le' : 'yuv420p');
+  if (codec === 'h264') {
+    assert.equal(video.color_range, 'tv');
+    assert.equal(video.color_space, 'bt709');
+  }
   assert.equal(video.width, expect.width);
   assert.equal(video.height, expect.height);
   assert.equal(video.avg_frame_rate, `${expect.fps}/1`);
@@ -108,6 +114,10 @@ async function verifyVideo(
   return {
     id: job.id,
     ...spec,
+    codec: video.codec_name,
+    pixelFormat: video.pix_fmt,
+    colorRange: video.color_range,
+    colorSpace: video.color_space,
     duration: Number(probe.format.duration),
     frameCount,
     keyframes: frameNumbers,
